@@ -277,7 +277,7 @@ def server(input, output, session):
             "g": np.repeat([f"g{i}" for i in range(0, len(suff_para))], POINT_CNT),
             "y": y 
         })
-        title=", ".join([f"g{gi}: {p:.2f}" for (gi, p) in enumerate(prob)])
+        title=", ".join([f"g{gi}: {p:.3f}" for (gi, p) in enumerate(prob)])
         title = "chance to be best " + title
         fig = (
             ggplot(pdf, aes(x="x", y="y", color="g")) + 
@@ -431,16 +431,16 @@ def chance_to_be_best(suff, rep_cnt=100000, no_approx=True):
 <h2 class="anchored" data-anchor-id="tips">tips</h2>
 <ul>
 <li>第一个是<strong>对照组</strong>，如果超过两个组，所有的p值/CI都是相对于对照组的，并且p值没有做「多重比较校正」</li>
-<li>「新增组」时候，已经填好的数值会重置</li>
-<li>change to be best: 在多余两组时，是<strong>超过其他所有的概率</strong></li>
+<li>「新增组」时候，<strong>已经填好的数值会重置</strong>, 所以，如果有更多组，先新增，再填数</li>
+<li>chance to be best: 在多于两组的情况下，是<strong>超过其他所有的概率</strong></li>
 </ul>
 <section id="原始数据" class="level3">
 <h3 class="anchored" data-anchor-id="原始数据">原始数据</h3>
 <ul>
 <li>算方差和均值的时候，原始数据需要先聚合到用户粒度</li>
-<li>二分变量，比说「是否付费」，不需要提供方差：它的方差可以由均值直接推出来，提供了也没啥问题</li>
+<li>二分变量，比说「是否付费」，不需要提供方差：它的方差可以由均值直接推出来，当然，提供了也没啥问题</li>
 </ul>
-<div id="b9f8a49a" class="cell" data-execution_count="1">
+<div id="71b17806" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>select treat</span>
@@ -502,17 +502,17 @@ f"单侧比例检验p值: {p_value:.3f}"</code></pre>
 <section id="连续变量" class="level2">
 <h2 class="anchored" data-anchor-id="连续变量">连续变量</h2>
 <ul>
-<li>连续变量的标准误有正态近似给出</li>
+<li>连续变量的标准误由「正态近似」给出</li>
 </ul>
 <p><span class="math display">\[
 stderr = \sqrt{\frac{var_0}{n_0} + \frac{var_1}{n_1}}
 \]</span></p>
 <ul>
-<li>给出的p值可以和statsmodels.api.ttest_ind验证，</li>
+<li>给出的p值可以和statsmodels.api.ttest_ind相互验证</li>
 </ul>
 <section id="原始数据-1" class="level3">
 <h3 class="anchored" data-anchor-id="原始数据-1">原始数据</h3>
-<div id="e493af9f" class="cell" data-execution_count="2">
+<div id="ea7767ea" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">--</span> 先聚合distinct_id粒度 </span>
@@ -21083,7 +21083,7 @@ treat,y
 1,0.0
 0,0.0</code></pre>
 <ul>
-<li><p>胜出概率：网上关于「连续变量」的贝叶斯AB test计算器较少。<a href="https://app.growthbook.io/">growthbook</a>有个偏向bayes分析的实验引擎，那里有些测试数据，可以验证「贝叶斯胜出概率」的可靠性</p>
+<li><p>胜出概率：网上关于「连续变量」的贝叶斯AB test计算器较少。<a href="https://app.growthbook.io/">growthbook</a>有个偏向bayes分析的实验引擎，那里有些测数据，可以验证「贝叶斯胜出概率」的逻辑</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="raw/C83A6758-D69D-461D-ABA7-CF68F3D511BA.png" class="img-fluid figure-img"></p>
@@ -21133,7 +21133,8 @@ treat,y
 </tbody>
 </table>
 <ul>
-<li>多余两个组的时候，growthbook算的是「chanceToBeatControl」，<strong>我这里算的是「chace to be best」,就是超过其他所有组的概率</strong></li>
+<li>多于两个组的时候，growthbook算的是「chanceToBeatControl」，<strong>我这里算的是「chace to be best」,就是超过其他所有组的概率</strong></li>
+<li>growthbook给出的「chanceToBeatControl」就是这里的 1 - p</li>
 </ul>
 </section>
 </section>
